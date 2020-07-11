@@ -13,8 +13,8 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     g_y += -1
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    b_keep_as_background = !(b_keep_as_background)
-    b_paused = true
+    circles = []
+    cycle()
 })
 controller.up.onEvent(ControllerButtonEvent.Repeated, function () {
     g_y += -1
@@ -42,6 +42,15 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     g_x += 1
 })
+function cycle () {
+    wait_f_paused()
+    expand(randint(2, 15), randint(1, 100))
+    shrink2()
+    for (let value of circles) {
+        wait_f_paused()
+        value.destroy()
+    }
+}
 controller.down.onEvent(ControllerButtonEvent.Repeated, function () {
     g_y += 1
 })
@@ -58,7 +67,6 @@ controller.left.onEvent(ControllerButtonEvent.Repeated, function () {
 })
 let myCircle: Circle = null
 let circles: Sprite[] = []
-let b_keep_as_background = false
 let b_paused = false
 let g_y = 0
 let g_x = 0
@@ -187,15 +195,7 @@ scene.setBackgroundImage(img`
 g_x = scene.screenWidth() / 2
 g_y = scene.screenHeight() / 2
 b_paused = false
-b_keep_as_background = false
+let b_keep_as_background = false
 forever(function () {
-    wait_f_paused()
-    expand(randint(2, 15), randint(1, 100))
-    shrink2()
-    for (let value of circles) {
-        wait_f_paused()
-        if (!(b_keep_as_background)) {
-            value.destroy()
-        }
-    }
+    cycle()
 })
