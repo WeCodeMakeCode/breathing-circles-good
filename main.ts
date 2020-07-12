@@ -1,20 +1,11 @@
 namespace SpriteKind {
     export const circle = SpriteKind.create()
 }
-function shrink2 () {
-    wait_f_paused()
-    circles.reverse()
-    for (let index = 0; index <= circles.length - 1; index++) {
-        circles[index].destroy()
-        pause(10)
-    }
-}
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     g_y += -1
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    circles = []
-    cycle()
+    b_keep_as_background = true
 })
 controller.up.onEvent(ControllerButtonEvent.Repeated, function () {
     g_y += -1
@@ -23,14 +14,28 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     b_paused = !(b_paused)
 })
 function expand (color: number, Radius: number) {
-    circles = []
-    for (let Index2 = 0; Index2 <= Radius; Index2++) {
-        wait_f_paused()
-        myCircle = circle.createCircleSprite(Index2 + 1, color)
+    myCircleList = circle.emptyCircleList()
+    ndx = 1
+    while (ndx <= Radius) {
+        wait_if_paused()
+        myCircle = circle.createCircleSprite(ndx, color)
         myCircle.circle.x = g_x
         myCircle.circle.y = g_y
-        circles.push(myCircle.circle)
-        pause(10)
+        myCircleList.addCircleToEnd(myCircle)
+        ndx += 1
+        // x and y
+        // add to DAL.DEVICE_COMPONENT_LISTENERS_CONFIGURED
+        pause(20)
+    }
+}
+function shrink () {
+    wait_if_paused()
+    ndx = myCircleList.length()
+    while (!(b_keep_as_background) && ndx > 0) {
+        myCircleList.removeAndDestroyLast()
+        ndx += -1
+        // circles[index].destroy()
+        pause(20)
     }
 }
 controller.right.onEvent(ControllerButtonEvent.Repeated, function () {
@@ -43,12 +48,15 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     g_x += 1
 })
 function cycle () {
-    wait_f_paused()
-    expand(randint(2, 15), randint(1, 100))
-    shrink2()
-    for (let value of circles) {
-        wait_f_paused()
-        value.destroy()
+    while (true) {
+        wait_if_paused()
+        expand(randint(2, 15), randint(1, 100))
+        if (b_keep_as_background) {
+            do_B()
+            b_keep_as_background = false
+        } else {
+            shrink()
+        }
     }
 }
 controller.down.onEvent(ControllerButtonEvent.Repeated, function () {
@@ -57,7 +65,17 @@ controller.down.onEvent(ControllerButtonEvent.Repeated, function () {
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     g_y += 1
 })
-function wait_f_paused () {
+function do_B () {
+    len = myCircleList.length()
+    console.logValue("B: len circle list", len)
+    for (let index = 0; index < len; index++) {
+        myCircle2 = myCircleList.getAndRemoveLast()
+        background_circles.addCircleToEnd(myCircle2)
+    }
+    console.logValue("B: len circle list", myCircleList.length())
+    console.logValue("B: len background list", background_circles.length())
+}
+function wait_if_paused () {
     while (b_paused) {
         pause(100)
     }
@@ -65,11 +83,17 @@ function wait_f_paused () {
 controller.left.onEvent(ControllerButtonEvent.Repeated, function () {
     g_x += -1
 })
+let myCircle2: Circle = null
+let len = 0
 let myCircle: Circle = null
-let circles: Sprite[] = []
+let ndx = 0
+let myCircleList: CircleList = null
 let b_paused = false
 let g_y = 0
 let g_x = 0
+let background_circles: CircleList = null
+let b_keep_as_background = false
+b_keep_as_background = false
 scene.setBackgroundImage(img`
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
@@ -192,10 +216,8 @@ scene.setBackgroundImage(img`
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 `)
+background_circles = circle.emptyCircleList()
 g_x = scene.screenWidth() / 2
 g_y = scene.screenHeight() / 2
 b_paused = false
-let b_keep_as_background = false
-forever(function () {
-    cycle()
-})
+cycle()
