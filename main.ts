@@ -23,8 +23,6 @@ function expand (color: number, Radius: number) {
         myCircle.sprite.y = g_y
         myCircleList.addCircleToEnd(myCircle)
         ndx += 1
-        // x and y
-        // add to DAL.DEVICE_COMPONENT_LISTENERS_CONFIGURED
         pause(20)
     }
 }
@@ -34,7 +32,6 @@ function shrink () {
     while (!(b_keep_as_background) && ndx > 0) {
         myCircleList.removeAndDestroyLast()
         ndx += -1
-        // circles[index].destroy()
         pause(20)
     }
 }
@@ -44,6 +41,14 @@ controller.right.onEvent(ControllerButtonEvent.Repeated, function () {
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     g_x += -1
 })
+function show_instructions_questions () {
+    if (game.ask("Show Instructions?")) {
+        msg = "Button A: pause until Button A is pressed again.  "
+        msg = "" + msg + "Button B: make current display background and continue.  "
+        msg = "" + msg + "Arrow Buttons: move center of circles."
+        game.showLongText(msg, DialogLayout.Full)
+    }
+}
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     g_x += 1
 })
@@ -67,13 +72,10 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 function do_B () {
     len = myCircleList.length()
-    console.logValue("B: len circle list", len)
     for (let index = 0; index < len; index++) {
         myCircle2 = myCircleList.getAndRemoveLast()
         background_circles.addCircleToEnd(myCircle2)
     }
-    console.logValue("B: len circle list", myCircleList.length())
-    console.logValue("B: len background list", background_circles.length())
 }
 function wait_if_paused () {
     while (b_paused) {
@@ -85,6 +87,7 @@ controller.left.onEvent(ControllerButtonEvent.Repeated, function () {
 })
 let myCircle2: Circle = null
 let len = 0
+let msg = ""
 let myCircle: Circle = null
 let ndx = 0
 let myCircleList: CircleList = null
@@ -220,4 +223,5 @@ background_circles = circlelist.emptyCircleList()
 g_x = scene.screenWidth() / 2
 g_y = scene.screenHeight() / 2
 b_paused = false
+show_instructions_questions()
 cycle()
