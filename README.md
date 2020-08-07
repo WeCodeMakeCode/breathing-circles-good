@@ -4,7 +4,7 @@ This programs demonstrates the MakeCode Arcade Extension breathing-circles-good.
 
 ## How to Use
 
-Click the link in the About section to the right.
+Click the link in the About section to the right to open the program in a browser. 
 Button A pauses the program until Button A is pressed again. 
 Button B freezes the current screen as a background and continues breathing.
 Arrow Buttons move the center of the concentric circles creating an artistic effect.
