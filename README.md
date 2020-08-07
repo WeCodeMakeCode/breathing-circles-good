@@ -9,7 +9,7 @@ Button A pauses the program until Button A is pressed again.
 Button B freezes the current screen as a background and continues breathing.
 Arrow Buttons move the center of the concentric circles creating an artistic effect.
 
-## Edit this extension
+## Edit this program
 
 To edit this program in MakeCode.
 
