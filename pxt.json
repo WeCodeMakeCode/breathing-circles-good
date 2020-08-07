@@ -3,7 +3,7 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "circle ext": "github:wecodemakecode/circle-ext#master"
+        "circle ext good": "github:wecodemakecode/circle-ext-good#master"
     },
     "files": [
         "main.blocks",
