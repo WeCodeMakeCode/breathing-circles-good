@@ -1,19 +1,17 @@
-# circle-play ![Build status badge](https://github.com/wecodemakecode/circle-play/workflows/MakeCode/badge.svg)
+# breathing-circles-good 
 
+This programs demonstrates the MakeCode Arcade Extension breathing-circles-good. The program draws expanding concentric circles, then deletes them in reverse order, creating a breathing effect. The code is simple because of the features of the Circle and CircleList extensions. "Good" in the extension name indicates that it uses circle-ext-good in a good, better best series. 
 
+## How to Use
 
-## Use this extension
-
-This repository can be added as an **extension** in MakeCode.
-
-* open https://arcade.makecode.com/
-* click on **New Project**
-* click on **Extensions** under the gearwheel menu
-* search for the URL of this repository and import
+Click the link in the About section to the right.
+Button A pauses the program until Button A is pressed again. 
+Button B freezes the current screen as a background and continues breathing.
+Arrow Buttons move the center of the concentric circles creating an artistic effect.
 
 ## Edit this extension
 
-To edit this repository in MakeCode.
+To edit this program in MakeCode.
 
 * open https://arcade.makecode.com/
 * click on **Import** then click on **Import URL**
